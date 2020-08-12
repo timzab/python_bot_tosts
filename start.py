@@ -4,7 +4,8 @@ import random
 # Подключаем модуль для Телеграма
 
 import telebot
-
+# Импортируем типы из модуля, чтобы создавать кнопки
+from telebot import types
 # Указываем токен с подключением Yaml файла
 import yaml
 
@@ -14,12 +15,8 @@ with open(r'config.yaml', 'r') as f:
 
 bot = telebot.TeleBot(token)
 
-# Импортируем типы из модуля, чтобы создавать кнопки
-
-from telebot import types
-
 # считывание данных из файлов
-with open("lady2.txt","r",encoding="utf-8") as f:
+with open("lady2.txt", "r", encoding="utf-8") as f:
     for line in f:
         lady = line.split('*')
 with open("wife2.txt", "r", encoding="utf-8") as f:
@@ -38,17 +35,17 @@ with open("birthday2.txt", "r", encoding="utf-8") as f:
     for line in f:
         birthday = line.split('*')
 
+
 # Метод, который получает сообщения и обрабатывает их
 
 @bot.message_handler(content_types=['text'])
-
 def get_text_messages(message):
     # Если написали «Привет»
-    if message.text.capitalize() == "Привет" or message.text.capitalize()=="Hi" :
+    if message.text.capitalize() == "Привет" or message.text.capitalize() == "Hi":
 
         # Пишем приветствие
 
-        #bot.send_message(message.from_user.id, "Привет, слушай тост!")
+        # bot.send_message(message.from_user.id, "Привет, слушай тост!")
 
         # Готовим кнопки
 
@@ -84,7 +81,8 @@ def get_text_messages(message):
 
         # Показываем все кнопки сразу и пишем сообщение о выборе
 
-        bot.send_message(message.from_user.id, text='Привет {}, выбери тост'.format(message.from_user.first_name), reply_markup=keyboard)
+        bot.send_message(message.from_user.id, text='Привет {}, выбери тост'.format(message.from_user.first_name),
+                         reply_markup=keyboard)
 
     elif message.text == "/help":
 
@@ -98,10 +96,9 @@ def get_text_messages(message):
 # Обработчик нажатий на кнопки
 
 @bot.callback_query_handler(func=lambda call: True)
-
 def callback_worker(call):
     # Если нажали на одну из кнопок — выводим тосты
-
+    msg = ''
     if call.data == "lady":
 
         # Формируем тост
@@ -117,11 +114,12 @@ def callback_worker(call):
     elif call.data == "birthday":
         msg = random.choice(birthday)
 
-    #bot.delete_message(call.chat.id, call.message.message_id)
+    # bot.delete_message(call.chat.id, call.message.message_id)
     bot.send_message(call.message.chat.id, msg)
 
-    #bot.delete_message(call.message.chat.id, call.message.message_id)
-    #print(call.message.chat.id,call.message.message_id,msg)
-# Запускаем постоянный опрос бота в Телеграме
+    # bot.delete_message(call.message.chat.id, call.message.message_id)
+    # print(call.message.chat.id,call.message.message_id,msg)
+    # Запускаем постоянный опрос бота в Телеграме
+
 
 bot.polling(none_stop=True, interval=0)
