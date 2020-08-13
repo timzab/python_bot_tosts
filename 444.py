@@ -5,7 +5,7 @@ s=""
 #     #line=line.strip()
 #     s=s+line
 #     print(s)
-with open("health2.txt","r",encoding="utf-8") as f:
+with open(r"c:\Анекдоты\shtirlits.txt","r",encoding="utf-8") as f:
     for line in f:
         line = line.split('*')
         print(line)
